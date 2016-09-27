@@ -28,11 +28,11 @@ shinyServer(function(input, output, session) {
       session, 
       "input.select", 
       choices = c(
-        "plain text",
-        "xml",
-        "xml (plays)",
-        "xml (no titles)",
-        "html"
+        "Plain Text" = "plain",
+        "XML" = "xml",
+        "XML (plays)" = "xml.drama",
+        "XML (no titles)" = "xml.notitles",
+        "HTML" = "html"
       )
     )
   })
@@ -42,11 +42,13 @@ shinyServer(function(input, output, session) {
       session, 
       "language.select", 
       choices = c(
-        "english",
-        "hungarian",
-        "polish",
-        "latin",
-        "spanish"
+        "English" = "English",
+        "English w/ contractions" = "English.contr",
+        "English w/ contractions and compounds" = "English.all",
+        "Latin" = "Latin",
+        "Latin w/ u/v correction" = "Latin.corr",
+        "Chinese, Japanese, Korean" = "CJK",
+        "Other" = "Other"
       )
     )
   })
@@ -56,8 +58,8 @@ shinyServer(function(input, output, session) {
       session, 
       "features.select", 
       choices = c(
-        "characters",
-        "words"
+        "Characters" = "c",
+        "Words" = "w"
       )
     )
   })
@@ -67,12 +69,37 @@ shinyServer(function(input, output, session) {
       session, 
       "statistics.select", 
       choices = c(
-        "Cluster Analysis" = "cluster",
-        "MDS" = "mds",
-        "PCA (covariance)" = "pca.cov",
-        "PCA (correlation)" = "pca.corr",
-        "tSNE" = "tsne",
-        "Consensus Tree" = "consensus.tree"
+        "Cluster Analysis" = "CA",
+        "MDS" = "MDS",
+        "PCA (covariance)" = "PCV",
+        "PCA (correlation)" = "PCR",
+        "tSNE" = "TSNE",
+        "Consensus Tree" = "BCT"
+      )
+    )
+  })
+  
+  observe({
+    updateSelectInput(
+      session, 
+      "scatterplot.select", 
+      choices = c(
+        "Labels" = "labels",
+        "Points" = "points",
+        "Both" = "both"
+      )
+    )
+  })
+  
+  observe({
+    updateSelectInput(
+      session, 
+      "pca.flavour.select", 
+      choices = c(
+        "Classic" = "classic",
+        "Loadings" = "loadings",
+        "Technical" = "technical",
+        "Symbols" = "symbols"
       )
     )
   })
@@ -82,14 +109,14 @@ shinyServer(function(input, output, session) {
       session, 
       "distances.select", 
       choices = c(
-        "Classic Delta",
-        "Argamon's Delta",
-        "Eder's Delta",
-        "Eder's Simple Distance",
-        "Manhattan",
-        "Canberra",
-        "Euclidean",
-        "Cosine"
+        "Classic Delta" = "dist.delta",
+        "Argamon's Delta" = "dist.argamon",
+        "Eder's Delta" = "dist.eder",
+        "Eder's Simple Distance" = "dist.simple",
+        "Manhattan" = "dist.manhattan",
+        "Canberra" = "dist.canberra",
+        "Euclidean" = "dist.euclidean",
+        "Cosine" = "dist.cosine"
       )
     )
   })
@@ -127,11 +154,54 @@ shinyServer(function(input, output, session) {
       session, 
       "output.plot.colour.choices", 
       choices = c(
-        "Colours" = "colours",
-        "Greyscale" = "greyscale",
+        "Colours" = "colors",
+        "Greyscale" = "grayscale",
         "Black" = "black"
       )
     )
+  })
+  
+  
+  default.label <- reactiveValues(
+    default = TRUE,
+    error = FALSE
+  )
+  
+  status.string <- eventReactive(input$db.connect, {
+    paste("Connected to", paste(input$db.database, input$db.collection, sep = ":"), sep = " ")
+  })
+  
+  observeEvent(input$db.connect, {
+    tryCatch({
+        print("connection code")
+        c <- mongolite::mongo(
+          collection = input$db.collection,
+          db = input$db.database,
+          url = db.url,
+          verbose = TRUE
+        )
+        default.label$error <- FALSE
+      },
+      error = function(err) {
+        print("error code")
+        print(err)
+        default.label$error <- TRUE
+      },
+      finally = {
+        print("finalély code")
+        default.label$default <- FALSE
+      }
+    )
+  })
+
+  output$db.status <- renderText({
+    if(default.label$default == TRUE) {
+      "Not Connected"
+    } else if (default.label$error == TRUE){
+      "Invalid connection parameters!"
+    } else {
+      status.string()
+    }
   })
   
 })

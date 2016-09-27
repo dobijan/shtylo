@@ -31,9 +31,28 @@ culling.panel <- wellPanel(
 statistics.panel <- wellPanel(
   selectInput("statistics.select", "Statistics", selected = NULL, multiple = FALSE, choices = NULL, width = "100%"),
   conditionalPanel(
-    condition = "input['statistics.select'] === 'consensus.tree'",
+    condition = "input['statistics.select'] === 'BCT'",
     numericInput("statistics.consensus.input", "Consensus Strength", value = 0.5, min = 0, max = 1, step = 0.1, 
                  width = NULL)
+  ),
+  conditionalPanel(
+    condition = "['MDS', 'PCV', 'PCR'].indexOf(input['statistics.select']) !== -1",
+    HTML('<hr style="color: grey;">'),
+    selectInput("scatterplot.select", "Texts on plot", selected = NULL, multiple = FALSE, choices = NULL, width = "100%"),
+    numericInput("scatterplot.margin.input", "Margins", value = 2, min = 1, max = NA, step = 1, width = NULL),
+    numericInput("scatterplot.offset.input", "Label offset", value = 3, min = 1, max = NA, step = 1, width = NULL)
+  ),
+  conditionalPanel(
+    condition = "['PCV', 'PCR'].indexOf(input['statistics.select']) !== -1",
+    HTML('<hr style="color: grey;">'),
+    selectInput("pca.flavour.select", "PCA flavour", selected = NULL, multiple = FALSE, choices = NULL, width = "100%"),
+    HTML('<hr style="color: grey;">')
+  ),
+  conditionalPanel(
+    condition = "input['statistics.select'] === 'CA'",
+    HTML('<hr style="color: grey;">'),
+    checkboxInput("clustering.horizontal.checkbox", "Horizontal CA tree", value = TRUE, width = NULL),
+    HTML('<hr style="color: grey;">')
   ),
   selectInput("distances.select", "Distances", selected = NULL, multiple = FALSE, choices = NULL, width = "100%")
 )
@@ -63,8 +82,7 @@ output.panel <- wellPanel(
     selectInput("output.plot.colour.choices", "Plot Colours", choices = NULL, selected = NULL, multiple = FALSE, 
                 width = NULL),
     checkboxInput("output.plot.default.checkbox", "Set defaults", value = FALSE, width = NULL),
-    checkboxInput("output.plot.titles.checkbox", "Display titles", value = FALSE, width = NULL),
-    HTML('<hr style="color: grey;">')
+    checkboxInput("output.plot.titles.checkbox", "Display titles", value = FALSE, width = NULL)
 )
 
 # create the stylometry sidebar

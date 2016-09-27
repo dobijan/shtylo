@@ -1,6 +1,15 @@
-library(shiny)
+# load dependencies
 library(stylo)
+library(mongolite)
+library(shiny)
 library(shinyBS)
+
+c = NULL
+db.url = "mongodb://localhost:27017"
+
+#initialize MongoDB connection
+# server <- mongo.create()
+# conn <- mongo.is.connected(server)
 
 # fluidRow(
 #   column(

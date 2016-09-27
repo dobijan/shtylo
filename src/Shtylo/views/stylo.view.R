@@ -1,5 +1,6 @@
 # import the stylometry sidebar
 stylo.sidebar.view <- dget("./views/stylo.sidebar.view.R")
+stylo.main.view <- dget("./views/stylo.main.view.R")
 
 # define the stylometry view
 fluidRow(
@@ -10,6 +11,6 @@ fluidRow(
   ),
   column(
     8, # width out opf 12
-    mainPanel()
+    stylo.main.view
   )
 )

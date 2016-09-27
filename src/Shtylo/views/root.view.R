@@ -1,5 +1,6 @@
 # import the stylometry view
 stylo.view <- dget("./views/stylo.view.R")
+db.view <- dget("./views/db.view.R")
 
 # Define the top level menu
 fluidPage(
@@ -16,6 +17,10 @@ fluidPage(
     tabPanel("Classification"),
     tabPanel("Rolling Delta"),
     tabPanel("Rolling Classification"),
+    tabPanel(
+      "Database",
+      db.view
+    ),
     navbarMenu(
       "More",
       tabPanel("About Shtylo"),
