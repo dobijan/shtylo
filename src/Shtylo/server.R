@@ -167,32 +167,66 @@ shinyServer(function(input, output, session) {
     error = FALSE
   )
   
+  console <- reactiveValues(
+    db.log = c()
+  )
+  
   status.string <- eventReactive(input$db.connect, {
     paste("Connected to", paste(input$db.database, input$db.collection, sep = ":"), sep = " ")
   })
   
   observeEvent(input$db.connect, {
     tryCatch({
-        print("connection code")
         c <- mongolite::mongo(
           collection = input$db.collection,
           db = input$db.database,
           url = db.url,
           verbose = TRUE
         )
+        log(
+          paste(
+            "Connection successful: ",
+            input$db.database,
+            ":",
+            input$db.collection,
+            sep = ""
+          ),
+          where = "db"
+        )
         default.label$error <- FALSE
       },
       error = function(err) {
-        print("error code")
-        print(err)
+        log(
+          paste(
+            "Connection failed! invalid connection parameters: database='",
+            input$db.database,
+            "', collection='",
+            input$db.collection,
+            "'!",
+            sep = ""
+          ),
+          where = "db"
+        )
         default.label$error <- TRUE
       },
       finally = {
-        print("finalély code")
         default.label$default <- FALSE
       }
     )
   })
+  
+  observeEvent(input$stylo.test, {
+    log("test", where = "stylo")
+  })
+  
+  log <- function (msg, where) {
+    entry <- paste(format(Sys.time(), "[%Y-%m-%d %H:%M:%S]"), msg, sep = " ")
+    if (where == "db") {
+      console$db.log <- c(entry, console$db.log)
+    } else if (where == "stylo"){
+      console$stylo.log <- c(entry,console$stylo.log)
+    }
+  }
 
   output$db.status <- renderText({
     if(default.label$default == TRUE) {
@@ -202,6 +236,15 @@ shinyServer(function(input, output, session) {
     } else {
       status.string()
     }
+  })
+  
+  output$db.console <- renderText({
+    return(paste(console$db.log, collapse = '\n'))
+  })
+  
+  
+  output$stylo.console <- renderText({
+    return(paste(console$stylo.log, collapse = '\n'))
   })
   
 })

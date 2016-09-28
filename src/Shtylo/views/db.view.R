@@ -1,5 +1,15 @@
-stylo.main.view <- dget("./views/stylo.main.view.R")
+# define the main panel of the databasa connection view
+db.main.view <- mainPanel(
+  width = 12,
+  h1(
+    "Event Log"
+  ),
+  verbatimTextOutput(
+    "db.console"
+  )
+)
 
+# define the database connection config sidebar
 db.config.view <- sidebarPanel(
   width = 12,
   wellPanel(
@@ -26,6 +36,6 @@ fluidRow(
   ),
   column(
     8, # width out opf 12
-    stylo.main.view
+    db.main.view
   )
 )

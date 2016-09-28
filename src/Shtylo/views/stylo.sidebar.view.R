@@ -126,5 +126,9 @@ sidebarPanel(
       style = style,
       output.panel
     )
+  ),
+  actionButton(
+    "stylo.test",
+    label = "Test"
   )
 )
