@@ -4,8 +4,11 @@ library(mongolite)
 library(shiny)
 library(shinyBS)
 
-c = NULL
-db.url = "mongodb://localhost:27017"
+db.url <- "mongodb://localhost:27017"
+wd <- normalizePath("./../../workspace")
+
+data(novels)
+pc <- parse.corpus(novels)
 
 #initialize MongoDB connection
 # server <- mongo.create()

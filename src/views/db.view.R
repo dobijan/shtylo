@@ -1,11 +1,35 @@
 # define the main panel of the databasa connection view
 db.main.view <- mainPanel(
   width = 12,
-  h1(
+  h2(
     "Event Log"
   ),
-  verbatimTextOutput(
-    "db.console"
+  wellPanel(
+    style = "overflow-y:scroll; max-height: 400px",
+    verbatimTextOutput(
+      "db.console"
+    )
+  ),
+  HTML('<hr style="color: grey;">'),
+  h2("Corpus upload"),
+  # fileInput(
+  #   "corpus.selector",
+  #   "Select texts to upload",
+  #   multiple = TRUE,
+  #   accept = c(
+  #     "application/xml",
+  #     "text/xml",
+  #     "text/html",
+  #     "text/plain"
+  #   ),
+  #   width = "100%"
+  # ),
+  uiOutput('resettableInput'),
+  tableOutput("corpus.table"),
+  actionButton(
+    "corpus.upload",
+    "Upload",
+    icon = icon(name = "upload", lib = "font-awesome")
   )
 )
 
