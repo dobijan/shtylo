@@ -4,6 +4,12 @@ function (input, output, session, logService) {
     conn = NULL
   )
   
+  set.workspace <- function (db, coll) {
+    dir.create(file.path(wd, db), showWarnings = FALSE)
+    dir.create(file.path(paste(wd, db, sep = "/"), coll), showWarnings = FALSE)
+    setwd(paste(wd, db, coll, sep = "/"))
+  }
+  
   status.string <- eventReactive(input$db.connect, {
     paste("Connected to", paste(input$db.database, input$db.collection, sep = ":"), sep = " ")
   })
@@ -51,6 +57,10 @@ function (input, output, session, logService) {
   })
   
   observeEvent(input$corpus.upload, {
+    if (is.null(files$files) || is.null(mongodb$conn)) {
+      logService$log("Please connect to a database and select some files for upload!", where = "db")
+      return()
+    }
     tryCatch({
       texts <- files$files
       content <- sapply(texts$datapath, function (path) {
@@ -58,7 +68,6 @@ function (input, output, session, logService) {
       }, simplify = TRUE)
       texts$content <- content
       texts$datapath <- NULL
-      print(mongodb$conn)
       mongodb$conn$insert(texts)
       logService$log(
         paste(
@@ -84,9 +93,6 @@ function (input, output, session, logService) {
         ),
         where = "db"
       )
-    },
-    finally = {
-      update
     })
   })
   
@@ -122,4 +128,33 @@ function (input, output, session, logService) {
   
   observe({
     files$files <- input$corpus.selector
-  })}
+  })
+  
+  output$resettable.file.input <- renderUI({
+    input$corpus.upload
+    fileInput(
+      "corpus.selector",
+      "Select texts to upload",
+      multiple = TRUE,
+      accept = c(
+        "application/xml",
+        "text/xml",
+        "text/html",
+        "text/plain"
+      ),
+      width = "100%"
+    )
+  })
+  
+  
+  load.corpus <- function () {
+    collection <- mongodb$conn$find()
+    corpus <- list(collection$content)
+    names(corpus) <- collection$name
+    corpus
+  }
+  
+  export <- list(load.corpus)
+  names(export) <- c("load.corpus")
+  export
+}

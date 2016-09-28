@@ -12,21 +12,14 @@ db.main.view <- mainPanel(
   ),
   HTML('<hr style="color: grey;">'),
   h2("Corpus upload"),
-  # fileInput(
-  #   "corpus.selector",
-  #   "Select texts to upload",
-  #   multiple = TRUE,
-  #   accept = c(
-  #     "application/xml",
-  #     "text/xml",
-  #     "text/html",
-  #     "text/plain"
-  #   ),
-  #   width = "100%"
-  # ),
-  uiOutput('resettableInput'),
+  uiOutput('resettable.file.input'),
   tableOutput("corpus.table"),
-  actionButton(
+  # actionButton(
+  #   "corpus.upload",
+  #   "Upload",
+  #   icon = icon(name = "upload", lib = "font-awesome")
+  # )
+  bsButton(
     "corpus.upload",
     "Upload",
     icon = icon(name = "upload", lib = "font-awesome")
