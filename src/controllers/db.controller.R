@@ -149,8 +149,11 @@ function (input, output, session, logService) {
   
   load.corpus <- function () {
     collection <- mongodb$conn$find()
-    corpus <- list(collection$content)
-    names(corpus) <- collection$name
+    corpus <- as.list(collection$content)
+    corpus <- setNames(
+      object = corpus,
+      nm = collection$name
+    )
     corpus
   }
   

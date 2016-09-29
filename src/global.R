@@ -5,7 +5,7 @@ library(shiny)
 library(shinyBS)
 
 db.url <- "mongodb://localhost:27017"
-wd <- normalizePath("./../../workspace")
+wd <- normalizePath("./../../workspace", winslash = "\\")
 
 data(novels)
 pc <- parse.corpus(novels)

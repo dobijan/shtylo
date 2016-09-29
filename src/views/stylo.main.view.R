@@ -8,11 +8,64 @@ mainPanel(
       "stylo.console"
     )
   ),
-  h1("Plot Area"),
-  div(
-    width = "100%",
-    imageOutput(
-      "stylo.plot"
+  tabsetPanel(
+    "stylo.result.panel",
+    tabPanel(
+      "Plot",
+      div(
+        width = "100%",
+        downloadButton(
+          "download.plot",
+          label = "Download"
+        ),
+        imageOutput(
+          "stylo.plot"
+        )
+      )
+    ),
+    tabPanel(
+      "Frequencies",
+      div(
+        width = "100%",
+        downloadButton(
+          "download.frequencies",
+          label = "Download"
+        ),
+        tableOutput("frequency.table")
+      )
+    ),
+    tabPanel(
+      "Distances",
+      div(
+        width = "100%",
+        downloadButton(
+          "download.distances",
+          label = "Download"
+        ),
+        tableOutput("distance.table")
+      )
+    ),
+    tabPanel(
+      "All Features",
+      div(
+        width = "100%",
+        downloadButton(
+          "download.all.features",
+          label = "Download"
+        ),
+        verbatimTextOutput("all.features.table")
+      )
+    ),
+    tabPanel(
+      "Used Features",
+      div(
+        width = "100%",
+        downloadButton(
+          "download.used.features",
+          label = "Download"
+        ),
+        verbatimTextOutput("used.features.table")
+      )
     )
   )
 )
