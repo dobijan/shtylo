@@ -7,7 +7,11 @@ fluidRow(
   title = "Shtylo - Stylometry",
   column(
     4, # width out of 12
-    stylo.sidebar.view
+    stylo.sidebar.view,
+    textOutput(
+      outputId = "stylo.job.progress",
+      inline = FALSE
+    )
   ),
   column(
     8, # width out opf 12

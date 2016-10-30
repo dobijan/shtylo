@@ -9,10 +9,6 @@ function (input, output, session) {
     stylo.log = c()
   )
   
-  observeEvent(input$stylo.test, {
-    log("test", where = "stylo")
-  })
-  
   log <- function (msg, where) {
     entry <- paste(format(Sys.time(), "[%Y-%m-%d %H:%M:%S]"), msg, sep = " ")
     if (where == "db") {
@@ -22,12 +18,12 @@ function (input, output, session) {
     }
   }
   
-  output$db.console <- renderText({
+  output$dbConsole <- renderText({
     return(paste(console$db.log, collapse = '\n'))
   })
   
   
-  output$stylo.console <- renderText({
+  output$styloConsole <- renderText({
     return(paste(console$stylo.log, collapse = '\n'))
   })
   

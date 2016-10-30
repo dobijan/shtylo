@@ -1,13 +1,18 @@
 # define the main panel of the databasa connection view
 db.main.view <- mainPanel(
   width = 12,
-  h2(
-    "Event Log"
+  tags$head(
+    tags$style(
+      type='text/css', 
+      '#dbConsole {overflow-y:scroll; min-height: 350px; max-height: 350px;'
+    )
   ),
-  wellPanel(
-    style = "overflow-y:scroll; max-height: 400px",
+  div(
+    h5(
+      "Database Log"
+    ),
     verbatimTextOutput(
-      "db.console"
+      "dbConsole"
     )
   ),
   HTML('<hr style="color: grey;">'),

@@ -1,11 +1,18 @@
-# initialize the main view of the stylometry view
+# initialize the main view of the stylometry page
 mainPanel(
   width = 12,
-  h1("Log"),
-  wellPanel(
-    style = "overflow-y:scroll; max-height: 100px",
+  tags$head(
+    tags$style(
+      type='text/css', 
+      '#styloConsole {overflow-y:scroll; min-height: 200px; max-height: 200px;'
+    )
+  ),
+  div(
+    h5(
+      "Stylometry Log"
+    ),
     verbatimTextOutput(
-      "stylo.console"
+      "styloConsole" # CSS doesn't like dotted names :(
     )
   ),
   tabsetPanel(
@@ -14,12 +21,27 @@ mainPanel(
       "Plot",
       div(
         width = "100%",
-        downloadButton(
-          "download.plot",
-          label = "Download"
+        conditionalPanel(
+          condition = "output['stylo.job.progress'] === 'Job finished!'",
+          selectInput(
+            "output.plot.format.choices", 
+            "Plot file formats", 
+            choices = NULL,
+            selected = NULL,
+            multiple = FALSE,
+            width = NULL
+          ),
+          downloadLink(
+            "download.plot",
+            label = "Download"
+          )
         ),
-        imageOutput(
-          "stylo.plot"
+        div(
+          width = "100%",
+          style = "overflow-y:scroll; max-height: 550px",
+          imageOutput(
+            "stylo.plot"
+          )
         )
       )
     ),
@@ -27,44 +49,72 @@ mainPanel(
       "Frequencies",
       div(
         width = "100%",
-        downloadButton(
-          "download.frequencies",
-          label = "Download"
+        conditionalPanel(
+          condition = "output['stylo.job.progress'] === 'Job finished!'",
+          downloadLink(
+            "download.frequencies",
+            label = "Download"
+          )
         ),
-        tableOutput("frequency.table")
+        div(
+          width = "100%",
+          style = "overflow-y:scroll; max-height: 550px",
+          tableOutput("frequency.table")
+        )
       )
     ),
     tabPanel(
       "Distances",
       div(
         width = "100%",
-        downloadButton(
-          "download.distances",
-          label = "Download"
+        conditionalPanel(
+          condition = "output['stylo.job.progress'] === 'Job finished!'",
+          downloadLink(
+            "download.distances",
+            label = "Download"
+          )
         ),
-        tableOutput("distance.table")
+        div(
+          width = "100%",
+          style = "overflow-y:scroll; max-height: 550px",
+          tableOutput("distance.table")
+        )
       )
     ),
     tabPanel(
       "All Features",
       div(
         width = "100%",
-        downloadButton(
-          "download.all.features",
-          label = "Download"
+        conditionalPanel(
+          condition = "output['stylo.job.progress'] === 'Job finished!'",
+          downloadLink(
+            "download.all.features",
+            label = "Download"
+          )
         ),
-        verbatimTextOutput("all.features.table")
+        div(
+          width = "100%",
+          style = "overflow-y:scroll; max-height: 550px",
+          verbatimTextOutput("all.features.table")
+        )
       )
     ),
     tabPanel(
       "Used Features",
       div(
         width = "100%",
-        downloadButton(
-          "download.used.features",
-          label = "Download"
+        conditionalPanel(
+          condition = "output['stylo.job.progress'] === 'Job finished!'",
+          downloadLink(
+            "download.used.features",
+            label = "Download"
+          )
         ),
-        verbatimTextOutput("used.features.table")
+        div(
+          width = "100%",
+          style = "overflow-y:scroll; max-height: 550px",
+          verbatimTextOutput("used.features.table")
+        )
       )
     )
   )

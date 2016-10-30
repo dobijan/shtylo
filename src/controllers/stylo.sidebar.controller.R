@@ -1,4 +1,27 @@
-function (input, output, session) {
+function (input, output, session, db.service, log.service) {
+  
+  observeEvent(
+    eventExpr = input$stylo.run, 
+    handlerExpr = {
+      if (db.service$is.connected()) {
+        tmp <- sidebar$run
+        sidebar$run <- tmp + 1
+        log.service$log(
+          "Stylo invoked with given parameters...",
+          where = "stylo"
+        )
+      } else {
+        log.service$log(
+          "Please connect to a database!",
+          where = "stylo"
+        )
+      }
+    }
+  )
+  
+  sidebar <- reactiveValues(
+    run = 0
+  )
   
   observe({
     updateSelectInput(
@@ -24,6 +47,13 @@ function (input, output, session) {
         "English w/ contractions and compounds" = "English.all",
         "Latin" = "Latin",
         "Latin w/ u/v correction" = "Latin.corr",
+        "Polish" = "polish",
+        "Hungarian" = "hungarian",
+        "French" = "french",
+        "Italian" = "italian",
+        "Spanish" = "spanish",
+        "Dutch" = "dutch",
+        "German" = "german",
         "Chinese, Japanese, Korean" = "CJK",
         "Other" = "Other"
       )
@@ -111,28 +141,18 @@ function (input, output, session) {
   })
   
   observe({
-    updateCheckboxGroupInput(
-      session, 
-      "output.graph.choices", 
-      choices = c(
-        "PDF" = "pdf",
-        "JPG" = "jpg",
-        "SVG" = "svg",
-        "PNG" = "png"
-      ),
-      inline = TRUE
-    )
-  })
-  
-  observe({
     updateSelectInput(
       session, 
       "output.plot.colour.choices", 
       choices = c(
         "Colours" = "colors",
-        "Greyscale" = "grayscale",
+        "Greyscale" = "greyscale",
         "Black" = "black"
       )
     )
   })
+  
+  export <- list(sidebar)
+  names(export) <- c("params")
+  export
 }

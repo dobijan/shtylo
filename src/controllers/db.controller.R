@@ -1,4 +1,4 @@
-function (input, output, session, logService) {
+function (input, output, session, log.service) {
   
   mongodb <- reactiveValues(
     conn = NULL
@@ -15,6 +15,7 @@ function (input, output, session, logService) {
   })
   
   observeEvent(input$db.connect, {
+    print("connect")
     tryCatch({
       mongodb$conn <- mongolite::mongo(
         collection = input$db.collection,
@@ -22,7 +23,7 @@ function (input, output, session, logService) {
         url = db.url,
         verbose = TRUE
       )
-      logService$log(
+      log.service$log(
         paste(
           "Connection successful: ",
           input$db.database,
@@ -32,11 +33,11 @@ function (input, output, session, logService) {
         ),
         where = "db"
       )
-      logService$default.label$error <- FALSE
+      log.service$default.label$error <- FALSE
       set.workspace(input$db.database, input$db.collection)
     },
     error = function(err) {
-      logService$log(
+      log.service$log(
         paste(
           "Connection failed! invalid connection parameters: database='",
           input$db.database,
@@ -47,18 +48,18 @@ function (input, output, session, logService) {
         ),
         where = "db"
       )
-      logService$default.label$error <- TRUE
+      log.service$default.label$error <- TRUE
       setwd(wd)
     },
     finally = {
-      logService$default.label$default <- FALSE
+      log.service$default.label$default <- FALSE
     }
     )
   })
   
   observeEvent(input$corpus.upload, {
     if (is.null(files$files) || is.null(mongodb$conn)) {
-      logService$log("Please connect to a database and select some files for upload!", where = "db")
+      log.service$log("Please connect to a database and select some files for upload!", where = "db")
       return()
     }
     tryCatch({
@@ -69,7 +70,7 @@ function (input, output, session, logService) {
       texts$content <- content
       texts$datapath <- NULL
       mongodb$conn$insert(texts)
-      logService$log(
+      log.service$log(
         paste(
           "Corpus insertion successful: ",
           input$db.database,
@@ -81,7 +82,7 @@ function (input, output, session, logService) {
       )
     },
     error = function(err) {
-      logService$log(
+      log.service$log(
         paste(
           "Corpus insertion failed at: ",
           input$db.database,
@@ -97,9 +98,9 @@ function (input, output, session, logService) {
   })
   
   output$db.status <- renderText({
-    if(logService$default.label$default == TRUE) {
+    if(log.service$default.label$default == TRUE) {
       "Not Connected"
-    } else if (logService$default.label$error == TRUE){
+    } else if (log.service$default.label$error == TRUE){
       "Invalid connection parameters!"
     } else {
       status.string()
@@ -157,7 +158,15 @@ function (input, output, session, logService) {
     corpus
   }
   
-  export <- list(load.corpus)
-  names(export) <- c("load.corpus")
+  is.connected <- function () {
+    ifelse(
+      test = is.null(mongodb$conn),
+      yes = FALSE,
+      no = TRUE
+    )
+  }
+  
+  export <- list(load.corpus, is.connected)
+  names(export) <- c("load.corpus", "is.connected")
   export
 }
