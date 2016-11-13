@@ -1,6 +1,6 @@
 stylo.sidebar.controller <- dget("./controllers/stylo.sidebar.controller.R")
 log.controller <- dget("./controllers/log.controller.R")
-db.controller <- dget("./controllers/db.controller.R")
+url.db.controller <- dget("./controllers/url.db.controller.R")
 stylo.main.controller <- dget("./controllers/stylo.main.controller.R")
 
 # Define server logic required to draw a histogram
@@ -10,7 +10,7 @@ shinyServer(function(input, output, session) {
   log.service <- log.controller(input, output, session)
   
   #initialize database
-  db.service <- db.controller(input, output, session, log.service)
+  db.service <- url.db.controller(input, output, session, log.service)
 
   # initialize the sidebar
   stylo.params.service <- stylo.sidebar.controller(

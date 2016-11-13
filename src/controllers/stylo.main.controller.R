@@ -2,8 +2,7 @@ function (input, output, shiny.session, db.service, log.service, stylo.params.se
   
   # store the stylo output in a reactive variable
   session <- reactiveValues(
-    stylo = NULL,
-    job.status = "IDLE"
+    stylo = NULL
   )
   
   # the stored console output of the stylo command
@@ -16,7 +15,6 @@ function (input, output, shiny.session, db.service, log.service, stylo.params.se
   
   # plot controller
   output$stylo.plot <- renderPlot({
-    print("render plot")
     if (input$stylo.run == 0) {
       return()
     } else {
@@ -177,7 +175,7 @@ function (input, output, shiny.session, db.service, log.service, stylo.params.se
   # all features table download controller
   output$download.all.features <- downloadHandler(
     filename = function() {
-      paste(input$db.database, input$db.collection, "features.all", "txt", sep = ".")
+      paste(db.service$database(), sb.service$collection(), "features.all", "txt", sep = ".")
     },
     content = function(handle) {
       writeLines(session$features, handle)
@@ -187,7 +185,7 @@ function (input, output, shiny.session, db.service, log.service, stylo.params.se
   # used features table download controller
   output$download.used.features <- downloadHandler(
     filename = function() {
-      paste(input$db.database, input$db.collection, "features.used", "txt", sep = ".")
+      paste(db.service$database(), sb.service$collection(), "features.used", "txt", sep = ".")
     },
     content = function(handle) {
       writeLines(session$features.used, handle)
@@ -197,7 +195,7 @@ function (input, output, shiny.session, db.service, log.service, stylo.params.se
   # frequencies table download controller
   output$download.frequencies <- downloadHandler(
     filename = function() {
-      paste(input$db.database, input$db.collection, "frequencies", "txt", sep = ".")
+      paste(db.service$database(), sb.service$collection(), "frequencies", "txt", sep = ".")
     },
     content = function(handle) {
       write.csv(x = session$frequencies, file = handle, sep = ";")
@@ -207,7 +205,7 @@ function (input, output, shiny.session, db.service, log.service, stylo.params.se
   # distances table download controller
   output$download.distances <- downloadHandler(
     filename = function() {
-      paste(input$db.database, input$db.collection, "distances", "txt", sep = ".")
+      paste(db.service$database(), db.service$collection(), "distances", "txt", sep = ".")
     },
     content = function(handle) {
       write.csv(x = session$distances, file = handle, sep = ";")
@@ -218,8 +216,8 @@ function (input, output, shiny.session, db.service, log.service, stylo.params.se
   output$download.plot <- downloadHandler(
     filename = function() {
       paste(
-        input$db.database, 
-        input$db.collection, 
+        db.service$database(),
+        sb.service$collection(),
         input$output.plot.format.choices, 
         sep = "."
       )

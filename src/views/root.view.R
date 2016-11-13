@@ -1,6 +1,5 @@
 # import the stylometry view
 stylo.view <- dget("./views/stylo.view.R")
-db.view <- dget("./views/db.view.R")
 
 # Define the top level menu
 fluidPage(
@@ -11,12 +10,6 @@ fluidPage(
   navbarPage(
     title = "Shtylo",
     id = "root.page",
-    tabPanel(
-      title = "Database",
-      value = "database",
-      icon = icon(name = "database", lib = "font-awesome"),
-      db.view
-    ),
     tabPanel(
       title = "Stylometry",
       value = "stylometry",
