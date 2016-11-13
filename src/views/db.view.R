@@ -19,11 +19,6 @@ db.main.view <- mainPanel(
   h2("Corpus upload"),
   uiOutput('resettable.file.input'),
   tableOutput("corpus.table"),
-  # actionButton(
-  #   "corpus.upload",
-  #   "Upload",
-  #   icon = icon(name = "upload", lib = "font-awesome")
-  # )
   bsButton(
     "corpus.upload",
     "Upload",
@@ -50,14 +45,14 @@ db.config.view <- sidebarPanel(
   )
 )
 
-# defined the database connection view
+# define the database connection view
 fluidRow(
   column(
     4, # width out of 12
     db.config.view
   ),
   column(
-    8, # width out opf 12
+    8, # width out of 12
     db.main.view
   )
 )
