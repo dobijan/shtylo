@@ -4,7 +4,6 @@ stylo.main.view <- dget("./views/stylo.main.view.R")
 
 # define the stylometry view
 fluidRow(
-  title = "Shtylo - Stylometry",
   column(
     4, # width out of 12
     stylo.sidebar.view,

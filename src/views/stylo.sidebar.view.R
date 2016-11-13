@@ -151,7 +151,7 @@ statistics.panel <- wellPanel(
       "statistics.consensus.input", 
       "Consensus Strength", 
       value = 0.5, 
-      min = 0, 
+      min = 0.4, 
       max = 1, 
       step = 0.1, 
       width = NULL
@@ -249,7 +249,7 @@ sampling.panel <- wellPanel(
     numericInput(
       "sampling.input", 
       "Random Samples", 
-      value = 1, 
+      value = 10000, 
       min = 1, 
       max = NA, 
       step = 1, 

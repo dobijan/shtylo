@@ -47,10 +47,10 @@ function (input, output, shiny.session, db.service, log.service, stylo.params.se
         min = 0,
         max = 1,
         detail = "Loading corpus",
-        session = shiny.session,
+        session = isolate(shiny.session),
         style = "notification",
         expr = {
-          corpus <- db.service$load.corpus()
+          corpus <- isolate(db.service$load.corpus())
           
           incProgress(
             amount = 0.2,
@@ -71,70 +71,72 @@ function (input, output, shiny.session, db.service, log.service, stylo.params.se
             detail = "Invoking Stylo"
           )
           
-          session$stylo <- stylo(
-            
-            # Invoke without GUI with predefined corpus
-            gui = FALSE, 
-            parsed.corpus = parsed,
-            
-            # Input & language
-            corpus.format = input$input.select,
-            encoding = ifelse(
-              input$utf8.checkbox,
-              "UTF-8",
-              "native.enc"
-            ),
-            corpus.lang = input$language.select,
-            
-            # Features
-            analyzed.features = input$features.select,
-            ngram.size = input$ngram.input,
-            preserve.case = input$case.checkbox,
-            
-            # Most Frequent Words
-            mfw.min = input$mfw.minimum.input,
-            mfw.max = input$mfw.maximum.input,
-            mfw.incr = input$mfw.increment.input,
-            start.at = input$mfw.freq.rank.input,
-            
-            # Culling
-            culling.min = input$culling.minimum.input,
-            culling.max = input$culling.maximum.input,
-            culling.incr = input$culling.increment.input,
-            mfw.list.cutoff = input$culling.list.cutoff.input,
-            delete.pronouns = input$culling.pronoun.checkbox,
-            
-            #Statistics
-            analysis.type = input$statistics.select,
-            consensus.strength = input$statistics.consensus.input,
-            text.id.on.graph = input$scatterplot.select,
-            add.to.margins = input$scatterplot.margin.input,
-            label.offset = input$scatterplot.offset.input,
-            pca.visual.flavour = input$pca.flavour.select,
-            dendrogram.layout.horizontal = input$clustering.horizontal.checkbox,
-            distance.measure = input$distances.select,
-            
-            # Sampling
-            sampling = input$sampling.select,
-            sample.size = input$sampling.input,
-            
-            # Output
-            display.on.screen = TRUE,
-            write.pdf.file = TRUE,
-            write.jpg.file = TRUE,
-            write.png.file = TRUE,
-            write.svg.file = TRUE,
-            plot.options.reset = input$output.plot.default.checkbox,
-            plot.custom.height = input$output.plot.height.input,
-            plot.custom.width = input$output.plot.width.input,
-            plot.font.size = input$output.plot.font.input,
-            plot.line.thickness = input$output.plot.line.input,
-            colors.on.graphs = input$output.plot.colour.choices,
-            titles.on.graphs = input$output.plot.titles.checkbox,
-            
-            # Undocumented but useful options
-            custom.graph.filename = custom.graph.file.prefix
-          )
+          isolate({
+            session$stylo <- stylo(
+              
+              # Invoke without GUI with predefined corpus
+              gui = FALSE, 
+              parsed.corpus = parsed,
+              
+              # Input & language
+              corpus.format = input$input.select,
+              encoding = ifelse(
+                input$utf8.checkbox,
+                "UTF-8",
+                "native.enc"
+              ),
+              corpus.lang = input$language.select,
+              
+              # Features
+              analyzed.features = input$features.select,
+              ngram.size = input$ngram.input,
+              preserve.case = input$case.checkbox,
+              
+              # Most Frequent Words
+              mfw.min = input$mfw.minimum.input,
+              mfw.max = input$mfw.maximum.input,
+              mfw.incr = input$mfw.increment.input,
+              start.at = input$mfw.freq.rank.input,
+              
+              # Culling
+              culling.min = input$culling.minimum.input,
+              culling.max = input$culling.maximum.input,
+              culling.incr = input$culling.increment.input,
+              mfw.list.cutoff = input$culling.list.cutoff.input,
+              delete.pronouns = input$culling.pronoun.checkbox,
+              
+              #Statistics
+              analysis.type = input$statistics.select,
+              consensus.strength = input$statistics.consensus.input,
+              text.id.on.graph = input$scatterplot.select,
+              add.to.margins = input$scatterplot.margin.input,
+              label.offset = input$scatterplot.offset.input,
+              pca.visual.flavour = input$pca.flavour.select,
+              dendrogram.layout.horizontal = input$clustering.horizontal.checkbox,
+              distance.measure = input$distances.select,
+              
+              # Sampling
+              sampling = input$sampling.select,
+              sample.size = input$sampling.input,
+              
+              # Output
+              display.on.screen = TRUE,
+              write.pdf.file = TRUE,
+              write.jpg.file = TRUE,
+              write.png.file = TRUE,
+              write.svg.file = TRUE,
+              plot.options.reset = input$output.plot.default.checkbox,
+              plot.custom.height = input$output.plot.height.input,
+              plot.custom.width = input$output.plot.width.input,
+              plot.font.size = input$output.plot.font.input,
+              plot.line.thickness = input$output.plot.line.input,
+              colors.on.graphs = input$output.plot.colour.choices,
+              titles.on.graphs = input$output.plot.titles.checkbox,
+              
+              # Undocumented but useful options
+              custom.graph.filename = custom.graph.file.prefix
+            )
+          })
           
           incProgress(
             amount = 0.4,
