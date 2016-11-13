@@ -15,7 +15,6 @@ function (input, output, session, log.service) {
   })
   
   observeEvent(input$db.connect, {
-    print("connect")
     tryCatch({
       mongodb$conn <- mongolite::mongo(
         collection = input$db.collection,

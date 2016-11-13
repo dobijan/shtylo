@@ -14,25 +14,6 @@ function (input, output, shiny.session, db.service, log.service, stylo.params.se
     local = TRUE
   )
   
-  output$stylo.job.progress <- renderText({
-    switch (
-      session$job.status,
-      "IDLE" = "No job scheduled...",
-      "RUNNING" = "Job running...",
-      "FINISHED" = "Job finished!"
-    )
-  })
-  
-  observe({
-    if (input$stylo.run == 0) {
-      session$job.status <- "IDLE"
-    } else if (is.null(session$stylo)) {
-      session$job.status <- "RUNNING"
-    } else {
-      session$job.status <- "FINISHED"
-    }
-  })
-  
   # plot controller
   output$stylo.plot <- renderPlot({
     print("render plot")
@@ -312,8 +293,4 @@ function (input, output, shiny.session, db.service, log.service, stylo.params.se
       }
     }
   )
-  
-  # shiny.session$onSessionEnded(function() {
-  #   close(stylo.output.connection)
-  # })
 }
