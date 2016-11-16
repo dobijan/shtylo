@@ -16,7 +16,6 @@ function (input, output, shiny.session, db.service, log.service, stylo.params.se
   
   # plot controller
   output$stylo.plot <- renderPlot({
-    print("render plot")
     if (input$stylo.run == 0) {
       return()
     } else {
