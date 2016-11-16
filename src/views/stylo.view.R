@@ -6,11 +6,7 @@ stylo.main.view <- dget("./views/stylo.main.view.R")
 fluidRow(
   column(
     4, # width out of 12
-    stylo.sidebar.view,
-    textOutput(
-      outputId = "stylo.job.progress",
-      inline = FALSE
-    )
+    stylo.sidebar.view
   ),
   column(
     8, # width out opf 12

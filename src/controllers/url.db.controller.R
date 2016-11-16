@@ -6,7 +6,6 @@ function (input, output, session, log.service) {
   )
   
   mongodb.database <- eventReactive(session$clientData$url_search, {
-    print("database update")
     parsed <- parseQueryString(
       str = session$clientData$url_search, 
       nested = FALSE
@@ -15,7 +14,6 @@ function (input, output, session, log.service) {
   })
   
   mongodb.collection <- eventReactive(session$clientData$url_search, {
-    print("collection update")
     parsed <- parseQueryString(
       str = session$clientData$url_search, 
       nested = FALSE
@@ -24,12 +22,10 @@ function (input, output, session, log.service) {
   })
   
   status.string <- eventReactive(c(mongodb.database(), mongodb.collection()), {
-    print("status string update")
     paste("Connected to", paste(mongodb.database(), mongodb.collection(), sep = ":"), sep = " ")
   })
   
   observe({
-    print("attempt connection")
     tryCatch({
       mongodb$conn <- mongolite::mongo(
         collection = mongodb.collection(),
@@ -52,7 +48,6 @@ function (input, output, session, log.service) {
   }
   
   load.corpus <- function () {
-    print("loading corpus")
     collection <- mongodb$conn$find()
     corpus <- as.list(collection$content)
     corpus <- setNames(
