@@ -262,7 +262,7 @@ output.panel <- wellPanel(
     numericInput(
       "output.plot.height.input", 
       "Plot Height", 
-      value = 45, 
+      value = 10, 
       min = 1, 
       max = NA, 
       step = 1, 
@@ -271,7 +271,7 @@ output.panel <- wellPanel(
     numericInput(
       "output.plot.width.input", 
       "Plot Width", 
-      value = 7, 
+      value = 10, 
       min = 1, 
       max = NA, 
       step = 1, 
