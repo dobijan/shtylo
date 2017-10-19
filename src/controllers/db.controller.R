@@ -67,6 +67,7 @@ function (input, output, session, log.service) {
         paste(readLines(path), collapse = "\n")
       }, simplify = TRUE)
       texts$content <- content
+      texts$title <- texts$name
       texts$datapath <- NULL
       mongodb$conn$insert(texts)
       log.service$log(
@@ -152,7 +153,7 @@ function (input, output, session, log.service) {
     corpus <- as.list(collection$content)
     corpus <- setNames(
       object = corpus,
-      nm = collection$name
+      nm = collection$title
     )
     corpus
   }

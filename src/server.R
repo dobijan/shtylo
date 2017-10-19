@@ -8,7 +8,6 @@ shinyServer(function(input, output, session) {
   
   # initialize logging
   log.service <- log.controller(input, output, session)
-  
   #initialize database
   db.service <- db.controller(input, output, session, log.service)
 

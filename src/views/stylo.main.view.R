@@ -3,7 +3,7 @@ mainPanel(
   width = 12,
   tags$head(
     tags$style(
-      type='text/css', 
+      type='text/css',
       '#styloConsole {overflow-y:scroll; min-height: 200px; max-height: 200px;'
     )
   ),
@@ -16,7 +16,8 @@ mainPanel(
     )
   ),
   tabsetPanel(
-    "stylo.result.panel",
+    type = "tabs",
+    id = "stylo.result.panel",
     tabPanel(
       "Plot",
       div(
@@ -24,8 +25,8 @@ mainPanel(
         conditionalPanel(
           condition = "input['stylo.run'] !== 0",
           selectInput(
-            "output.plot.format.choices", 
-            "Plot file formats", 
+            "output.plot.format.choices",
+            "Plot file formats",
             choices = NULL,
             selected = NULL,
             multiple = FALSE,
